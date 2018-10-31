@@ -4,6 +4,17 @@ echo "FROM buildpack-deps:$(awk -F'_' '{print tolower($2)}' <<< $LINUX_VERSION)"
 
 echo "RUN apt-get update"
 
+if [ ! -e $NIM_NUM ] ; then
+    echo "RUN wget https://nim-lang.org/download/nim-0.19.0.tar.xz && \
+    xz -d nim-0.19.0.tar.xz && \
+    tar xvf nim-0.19.0.tar && \
+    cd nim-0.19.0/ && \ 
+    sh build.sh && \
+    bin/nim c koch && \
+    ./koch tools && \
+    bin/nim -v"
+fi
+
 if [ ! -e $RUBY_VERSION_NUM ] ; then
     echo "RUN apt-get install -y libssl-dev && wget http://ftp.ruby-lang.org/pub/ruby/$(awk -F'.' '{ print $1"."$2 }' <<< $RUBY_VERSION_NUM)/ruby-$RUBY_VERSION_NUM.tar.gz && \
     tar -xzvf ruby-$RUBY_VERSION_NUM.tar.gz && \
